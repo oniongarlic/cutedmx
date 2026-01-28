@@ -26,24 +26,44 @@ ColumnLayout {
         Layout.alignment: Qt.AlignHCenter
     }
 
+    NumberAnimation {
+        id: fadeOut
+        target: ch
+        property: "value"
+        duration: 500
+        from: 255
+        to: 0
+        easing.type: Easing.InOutQuad
+    }
+
+    NumberAnimation {
+        id: fadeIn
+        target: ch
+        property: "value"
+        duration: 500
+        from: 0
+        to: 255
+        easing.type: Easing.InOutQuad
+    }
+
     ColumnLayout {
         Layout.fillWidth: false
         Button {
-            text: "FU"
+            text: "In"
             onClicked: {
-
+                fadeIn.start()
             }
         }
         Button {
-            text: "FD"
+            text: "Out"
             onClicked: {
-
+                fadeOut.start()
             }
         }
     }
 
     Label {
-        text: ch.value
+        text: Math.round(ch.value)
         Layout.alignment: Qt.AlignHCenter
     }
 
