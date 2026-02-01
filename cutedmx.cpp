@@ -21,6 +21,11 @@ CuteDMX::~CuteDMX()
     m_thread.wait();
 }
 
+void CuteDMX::setPort(const QString device)
+{
+    m_worker->setPort(device);
+}
+
 void CuteDMX::setValue(uint channel, uint8_t value, bool delayd)
 {
     if (channel>512 || channel<1) {

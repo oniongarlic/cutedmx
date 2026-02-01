@@ -11,18 +11,33 @@ ApplicationWindow {
     visible: true
     title: qsTr("Cute DMX")
 
-    header: ToolBar {
-        RowLayout {
-            ToolButton {
-                text: "Quit"
-                onClicked: Qt.exit(0)
-            }
-            ToolButton {
-                text: "Open"
-                onClicked: {
-                    dmx.start();
+    PortDialog {
+        id: portDialog
+
+        onAccepted: {
+            dmx.setPort(device);
+            dmx.start();
+        }
+    }
+
+    menuBar: MenuBar {
+        Menu {
+            title: "File"
+            Action {
+                text: "Connect..."
+                onTriggered: {
+                    portDialog.open()
                 }
             }
+            Action {
+                text: "Quit"
+                onTriggered: Qt.exit(0)
+            }
+        }
+    }
+
+    header: ToolBar {
+        RowLayout {
             ToolButton {
                 text: "Update"
                 onClicked: {

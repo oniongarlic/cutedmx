@@ -1,6 +1,11 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
+#include <QDebug>
+
+#include <QSerialPortInfo>
+#include "serialportinfomodel.h"
+
 #include "cutedmx.h"
 
 int main(int argc, char *argv[])
@@ -10,6 +15,7 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 
     qmlRegisterType<CuteDMX>("org.tal.dmx", 1, 0, "CuteDMX");
+    qmlRegisterType<SerialPortInfoModel>("org.tal.dmx", 1, 0, "SerialPortInfoModel");
 
     QObject::connect(
         &engine,

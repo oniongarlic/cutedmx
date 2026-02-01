@@ -11,6 +11,8 @@ class CuteDMXWorker : public QObject
 public:
     explicit CuteDMXWorker(QObject *parent = nullptr);
 
+    void setPort(const QString device);
+
 public slots:
     void updateFrame(QByteArray &newframe);
     void loop();
@@ -22,7 +24,8 @@ private:
     QMutex m_mutex;
     QSerialPort *m_port;    
     QByteArray m_frame;
-    bool send();
+    QString m_device;
+    bool send();    
 };
 
 #endif // CUTEDMXWORKER_H

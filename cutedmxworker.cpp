@@ -7,6 +7,12 @@ CuteDMXWorker::CuteDMXWorker(QObject *parent)
     : QObject{parent}
 {
     m_frame.resize(513, 0);
+    m_device="/dev/ttyUSB0";
+}
+
+void CuteDMXWorker::setPort(const QString device)
+{
+    m_device=device;
 }
 
 void CuteDMXWorker::updateFrame(QByteArray &newframe)
@@ -24,7 +30,7 @@ void CuteDMXWorker::updateFrame(QByteArray &newframe)
 void CuteDMXWorker::loop()
 {
     m_port=new QSerialPort(this);
-    m_port->setPortName("/dev/ttyUSB0");
+    m_port->setPortName(m_device);
     m_port->setBaudRate(250000);
     m_port->setDataBits(QSerialPort::Data8);
     m_port->setParity(QSerialPort::NoParity);
@@ -32,11 +38,12 @@ void CuteDMXWorker::loop()
     m_port->setFlowControl(QSerialPort::NoFlowControl);
 
     if (!m_port->open(QIODevice::WriteOnly)) {
-        qCritical("Failed to open serial port");
+        qCritical() << "Failed to open serial port" << m_device;
+        delete m_port;
         return;
     }
 
-    qDebug("DMX active");
+    qDebug() << "DMX active on port" << m_device;
 
     emit isRunning(true);
 
@@ -50,6 +57,8 @@ void CuteDMXWorker::loop()
         }
         QThread::yieldCurrentThread();
     }
+
+    delete m_port;
 
     emit isRunning(false);
 }

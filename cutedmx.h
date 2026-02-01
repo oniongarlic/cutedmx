@@ -14,6 +14,8 @@ public:
     explicit CuteDMX(QObject *parent = nullptr);
     ~CuteDMX();
 
+    Q_INVOKABLE void setPort(const QString device);
+
     Q_INVOKABLE void setValue(uint channel, uint8_t value, bool delayd=false);
     Q_INVOKABLE void start();
     Q_INVOKABLE void stop();
