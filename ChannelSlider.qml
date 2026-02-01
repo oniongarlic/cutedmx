@@ -24,6 +24,7 @@ ColumnLayout {
         orientation: Qt.Vertical
         wheelEnabled: true
         Layout.alignment: Qt.AlignHCenter
+        Layout.fillHeight: true
     }
 
     NumberAnimation {
@@ -31,7 +32,7 @@ ColumnLayout {
         target: ch
         property: "value"
         duration: 500
-        from: 255
+        from: ch.value
         to: 0
         easing.type: Easing.InOutQuad
     }
@@ -41,7 +42,7 @@ ColumnLayout {
         target: ch
         property: "value"
         duration: 500
-        from: 0
+        from: ch.value
         to: 255
         easing.type: Easing.InOutQuad
     }
@@ -58,6 +59,12 @@ ColumnLayout {
             text: "Out"
             onClicked: {
                 fadeOut.start()
+            }
+        }
+        Button {
+            text: "Zero"
+            onClicked: {
+                ch.value=0;
             }
         }
     }
