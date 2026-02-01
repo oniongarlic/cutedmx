@@ -11,6 +11,9 @@ ApplicationWindow {
     visible: true
     title: qsTr("Cute DMX")
 
+    property int channelStep: 16
+    property int channels: 8
+
     PortDialog {
         id: portDialog
 
@@ -75,7 +78,7 @@ ApplicationWindow {
             Layout.fillHeight: true
             Layout.alignment: Qt.AlignTop
             Repeater {
-                model: 8
+                model: channels
                 ChannelSlider {
                     channelLabel: index+1
                     onValueChanged: {
@@ -83,7 +86,7 @@ ApplicationWindow {
                             console.debug(fi, firep.itemAt(fi).checked)
                             if (!firep.itemAt(fi).checked)
                                 continue
-                            let f=(fi)*8+(index+1)
+                            let f=(fi)*channelStep+(index+1)
                             console.debug(f, value)
                             dmx.setValue(f, value)
                         }
