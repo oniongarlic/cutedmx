@@ -1,5 +1,8 @@
 #include "cutedmx.h"
 
+#include <QJsonDocument>
+#include <QJsonArray>
+
 #include <QDebug>
 
 CuteDMX::CuteDMX(QObject *parent)
@@ -49,6 +52,38 @@ void CuteDMX::blackOut()
     QByteArray black(513, 0);
 
     m_worker->updateFrame(black);
+}
+
+bool CuteDMX::fromJson(QString json)
+{
+    auto d=QJsonDocument::fromJson(json.toUtf8());
+    if (!d.isArray() || d.isEmpty())
+        return false;
+
+    auto a=d.array();
+    if (a.empty())
+        return false;
+
+    if (a.size()!=513)
+        return false;
+
+    // ignore first
+    for (uint i=1;i<512;i++) {
+        m_frame[i]=static_cast<unsigned char>(a.at(i).toInt());
+    }
+
+    return true;
+}
+
+QString CuteDMX::toJson()
+{
+    QJsonArray a;
+    for (unsigned char b : std::as_const(m_frame)) {
+        a.append(static_cast<int>(b));
+    }
+
+    QJsonDocument d(a);
+    return d.toJson(QJsonDocument::Compact);
 }
 
 void CuteDMX::start()

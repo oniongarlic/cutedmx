@@ -12,6 +12,10 @@ int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
+    app.setOrganizationName("TalOrg");
+    app.setOrganizationDomain("tal.org");
+    app.setApplicationName("CuteDMX");
+
     QQmlApplicationEngine engine;
 
     qmlRegisterType<CuteDMX>("org.tal.dmx", 1, 0, "CuteDMX");

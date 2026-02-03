@@ -1,3 +1,4 @@
+import QtCore
 import QtQuick
 import QtQuick.Window
 import QtQuick.Layouts
@@ -13,6 +14,11 @@ ApplicationWindow {
 
     property int channelStep: 16
     property int channels: 8
+
+    Settings {
+        id: settingsDmx
+        category: "dmx"
+    }
 
     PortDialog {
         id: portDialog
@@ -32,6 +38,27 @@ ApplicationWindow {
                     portDialog.open()
                 }
             }
+            Action {
+                text: "Save"
+                onTriggered: {
+                    let a=dmx.toJson()
+                    console.debug(a)
+                    settingsDmx.setValue('values', a)
+                }
+            }
+            Action {
+                text: "Load"
+                onTriggered: {
+                    let a=settingsDmx.value('values')
+                    console.debug(a)
+                    dmx.fromJson(a)
+                }
+            }
+
+            MenuSeparator {
+
+            }
+
             Action {
                 text: "Quit"
                 onTriggered: Qt.exit(0)

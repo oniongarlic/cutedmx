@@ -23,6 +23,9 @@ public:
     Q_INVOKABLE void updateFrame();
     Q_INVOKABLE void blackOut();
 
+    Q_INVOKABLE QString toJson();
+    Q_INVOKABLE bool fromJson(QString json);
+
 signals:
 
 private:
