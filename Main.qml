@@ -16,8 +16,21 @@ ApplicationWindow {
     property int channels: 8
 
     Settings {
+        id: settingsDdev
+        category: "device"
+    }
+
+    Settings {
         id: settingsDmx
         category: "dmx"
+    }
+
+    Component.onCompleted: {
+        let d=settingsDdev.value('device')
+        if (d!='') {
+            dmx.setPort(d);
+            dmx.start()
+        }
     }
 
     PortDialog {
@@ -26,6 +39,8 @@ ApplicationWindow {
         onAccepted: {
             dmx.setPort(device);
             dmx.start();
+
+            settingsDdev.setValue('device', device)
         }
     }
 
