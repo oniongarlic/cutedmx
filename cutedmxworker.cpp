@@ -40,6 +40,7 @@ void CuteDMXWorker::loop()
     if (!m_port->open(QIODevice::WriteOnly)) {
         qCritical() << "Failed to open serial port" << m_device;
         delete m_port;
+        m_port=nullptr;
         return;
     }
 
@@ -59,6 +60,9 @@ void CuteDMXWorker::loop()
     }
 
     delete m_port;
+    m_port=nullptr;
+    
+    qDebug() << "DMX deactivated";
 
     emit isRunning(false);
 }

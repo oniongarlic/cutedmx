@@ -6,7 +6,8 @@
 #include <QDebug>
 
 CuteDMX::CuteDMX(QObject *parent)
-    : QObject{parent}
+    : QObject{parent},
+    m_active(false)
 {
     m_frame.resize(513, 0);
 
@@ -15,6 +16,7 @@ CuteDMX::CuteDMX(QObject *parent)
 
     connect(&m_thread, &QThread::started, m_worker, &CuteDMXWorker::loop);
     connect(&m_thread, &QThread::finished, m_worker, &QObject::deleteLater);
+    connect(m_worker, &CuteDMXWorker::isRunning, this, &CuteDMX::actived);
 }
 
 CuteDMX::~CuteDMX()
@@ -75,6 +77,16 @@ bool CuteDMX::fromJson(QString json)
     return true;
 }
 
+void CuteDMX::actived(bool enabled)
+{
+    qDebug() << "active" << enabled;
+    
+    m_active=enabled;
+    emit activeChanged();
+    
+    emit isActive(enabled);
+}
+
 QString CuteDMX::toJson()
 {
     QJsonArray a;
@@ -94,4 +106,9 @@ void CuteDMX::start()
 void CuteDMX::stop()
 {
     m_thread.requestInterruption();
+}
+
+bool CuteDMX::active() const
+{
+    return m_active;
 }

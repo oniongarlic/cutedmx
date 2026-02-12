@@ -10,8 +10,8 @@ class CuteDMXWorker : public QObject
     Q_OBJECT
 public:
     explicit CuteDMXWorker(QObject *parent = nullptr);
-
     void setPort(const QString device);
+    bool enabled() { return m_port ? true : false ; };
 
 public slots:
     void updateFrame(QByteArray &newframe);

@@ -49,6 +49,7 @@ ApplicationWindow {
             title: "File"
             Action {
                 text: "Connect..."
+                enabled: !dmx.active
                 onTriggered: {
                     portDialog.open()
                 }
@@ -119,6 +120,7 @@ ApplicationWindow {
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.alignment: Qt.AlignTop
+            enabled: dmx.active
             Repeater {
                 model: channels
                 ChannelSlider {

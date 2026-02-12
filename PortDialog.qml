@@ -25,6 +25,7 @@ Dialog {
         }
         ComboBox {
             id: deviceCombo
+            Layout.fillWidth: true
             model: SerialPortInfoModel {}
 
                 textRole: "portName"

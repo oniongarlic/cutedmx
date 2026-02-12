@@ -10,6 +10,7 @@
 class CuteDMX : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(bool active READ active NOTIFY activeChanged FINAL)
 public:
     explicit CuteDMX(QObject *parent = nullptr);
     ~CuteDMX();
@@ -25,14 +26,23 @@ public:
 
     Q_INVOKABLE QString toJson();
     Q_INVOKABLE bool fromJson(QString json);
-
+    
+    bool active() const;
+    
 signals:
-
+    void isActive(bool enabled);
+    
+    void activeChanged();
+    
+private slots:
+    void actived(bool enabled);
+    
 private:
     QThread m_thread;
     QByteArray m_frame;
 
     CuteDMXWorker *m_worker;
+    bool m_active;
 };
 
 #endif // CUTEDMX_H

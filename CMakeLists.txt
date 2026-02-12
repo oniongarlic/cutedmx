@@ -8,7 +8,7 @@ find_package(Qt6 REQUIRED COMPONENTS Quick)
 
 find_package(Qt6 REQUIRED COMPONENTS SerialPort)
 
-qt_standard_project_setup(REQUIRES 6.8)
+qt_standard_project_setup(REQUIRES 6.6)
 
 qt_add_executable(appcutedmx
     main.cpp
