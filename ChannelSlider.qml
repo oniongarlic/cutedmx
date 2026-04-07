@@ -10,6 +10,8 @@ ColumnLayout {
 
     width: chl.width*3
 
+    Layout.alignment: Qt.AlignHCenter
+
     Label {
         id: chl
         Layout.alignment: Qt.AlignHCenter
