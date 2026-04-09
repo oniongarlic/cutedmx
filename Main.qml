@@ -10,6 +10,8 @@ ApplicationWindow {
     id: app
     width: 800
     height: 480
+    minimumWidth: 800
+    minimumHeight: 480
     visible: true
     title: qsTr("Cute DMX")
 
