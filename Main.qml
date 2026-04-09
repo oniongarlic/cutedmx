@@ -129,7 +129,7 @@ ApplicationWindow {
         onClicked: {
             if (button.objectName=='8') {
                 app.channels=8
-                app.split=2
+                app.split=1
             } else if (button.objectName=='16') {
                 app.channels=16
                 app.split=2
