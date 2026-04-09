@@ -126,19 +126,30 @@ ApplicationWindow {
         }
     }
 
+    function updateChannelsGrid(gs) {
+        switch (gs) {
+        case '8': {
+            app.channels=8
+            app.split=1
+        }
+        break;
+        case '16': {
+            app.channels=16
+            app.split=2
+        }
+        break;
+        case '32': {
+            app.channels=32
+            app.split=2
+        }
+        break;
+        }
+    }
+
     ButtonGroup {
         id: channelsGroup
         onClicked: {
-            if (button.objectName=='8') {
-                app.channels=8
-                app.split=1
-            } else if (button.objectName=='16') {
-                app.channels=16
-                app.split=2
-            } else if (button.objectName=='32') {
-                app.channels=32
-                app.split=2
-            }
+            updateChannelsGrid(button.objectName);
         }
     }
 
