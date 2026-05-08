@@ -27,6 +27,11 @@ ApplicationWindow {
         category: "dmx"
     }
 
+    Shortcut {
+        sequences: [StandardKey.FullScreen]
+        onActivated: menuFullScreen.click()
+    }
+
     Component.onCompleted: {
         let d=settingsDdev.value('device')
         if (d!='') {
@@ -82,6 +87,18 @@ ApplicationWindow {
                     console.debug(a)
                     dmx.fromJson(a)
                 }
+            }
+
+            MenuSeparator {
+
+            }
+
+            MenuItem {
+                id: menuFullScreen
+                text: "&Full screen"
+                checkable: true
+                checked: visibility==Window.FullScreen ? true : false
+                onCheckedChanged: visibility=!checked ? Window.Windowed : Window.FullScreen
             }
 
             MenuSeparator {
