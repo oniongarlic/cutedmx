@@ -37,10 +37,15 @@ void CuteDMXWorker::loop()
     m_port->setStopBits(QSerialPort::TwoStop);
     m_port->setFlowControl(QSerialPort::NoFlowControl);
 
+    connect(m_port, &QSerialPort::errorOccurred, this, &CuteDMXWorker::errorOccurred);
+
     if (!m_port->open(QIODevice::WriteOnly)) {
         qCritical() << "Failed to open serial port" << m_device;
         delete m_port;
         m_port=nullptr;
+        emit invalidPort();
+        emit isRunning(false);
+        this->deleteLater();
         return;
     }
 
@@ -65,6 +70,21 @@ void CuteDMXWorker::loop()
     qDebug() << "DMX deactivated";
 
     emit isRunning(false);
+
+    this->deleteLater();
+}
+
+void CuteDMXWorker::errorOccurred(QSerialPort::SerialPortError error)
+{
+    qDebug() << "Serial error" << error;
+    switch (error) {
+    case QSerialPort::TimeoutError:
+    case QSerialPort::WriteError:
+    case QSerialPort::ResourceError:
+        QThread::currentThread()->requestInterruption();
+        break;
+    default: ;
+    }
 }
 
 bool CuteDMXWorker::send()
