@@ -39,6 +39,7 @@ ApplicationWindow {
         id: portDialog
 
         onAccepted: {
+            console.debug("Using serial", device)
             dmx.setPort(device);
             dmx.start();
 
@@ -55,6 +56,16 @@ ApplicationWindow {
                 onTriggered: {
                     portDialog.open()
                 }
+            }
+            Action {
+                text: "Disconnect"
+                enabled: dmx.active
+                onTriggered: {
+                    dmx.stop();
+                }
+            }
+            MenuSeparator {
+
             }
             Action {
                 text: "Save"
@@ -135,7 +146,7 @@ ApplicationWindow {
 
     ButtonGroup {
         id: channelsGroup
-        onClicked: {
+        onClicked: (button) => {
             if (button.objectName=='8') {
                 app.channels=8
                 app.split=1
