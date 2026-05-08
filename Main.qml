@@ -25,6 +25,11 @@ ApplicationWindow {
     }
 
     Settings {
+        id: settingsChannels
+        category: "channels"
+    }
+
+    Settings {
         id: settingsDmx
         category: "dmx"
     }
@@ -144,6 +149,7 @@ ApplicationWindow {
         }
         break;
         }
+        settingsChannels.setValue('gs', gs)
     }
 
     ButtonGroup {
