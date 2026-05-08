@@ -1,5 +1,6 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQuickStyle>
 
 #include <QDebug>
 
@@ -20,6 +21,8 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<CuteDMX>("org.tal.dmx", 1, 0, "CuteDMX");
     qmlRegisterType<SerialPortInfoModel>("org.tal.dmx", 1, 0, "SerialPortInfoModel");
+
+    QQuickStyle::setStyle("Material");
 
     QObject::connect(
         &engine,

@@ -19,6 +19,10 @@ public slots:
 
 signals:
     void isRunning(bool running);
+    void invalidPort();
+
+private slots:
+    void errorOccurred(QSerialPort::SerialPortError error);
 
 private:
     QMutex m_mutex;

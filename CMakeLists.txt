@@ -4,7 +4,7 @@ project(cutedmx VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Quick)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Quick QuickControls2)
 
 find_package(Qt6 REQUIRED COMPONENTS SerialPort)
 
@@ -37,7 +37,10 @@ set_target_properties(appcutedmx PROPERTIES
 )
 
 target_link_libraries(appcutedmx
-    PRIVATE Qt6::Quick
+    PRIVATE
+    Qt::Gui
+    Qt::Quick
+    Qt::QuickControls2
 )
 
 target_link_libraries(appcutedmx PRIVATE Qt6::SerialPort)

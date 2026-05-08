@@ -46,6 +46,7 @@ ApplicationWindow {
         id: portDialog
 
         onAccepted: {
+            console.debug("Using serial", device)
             dmx.setPort(device);
             dmx.start();
 
@@ -62,6 +63,16 @@ ApplicationWindow {
                 onTriggered: {
                     portDialog.open()
                 }
+            }
+            Action {
+                text: "Disconnect"
+                enabled: dmx.active
+                onTriggered: {
+                    dmx.stop();
+                }
+            }
+            MenuSeparator {
+
             }
             Action {
                 text: "Save"
@@ -110,6 +121,15 @@ ApplicationWindow {
                 checkable: true
                 text: "32 (2 rows)"
                 ButtonGroup.group: channelsGroup
+            }
+            MenuSeparator {
+
+            }
+            MenuItem {
+                id: showButtonsMenu
+                checkable: true
+                checked: true
+                text: "Show buttons"
             }
         }
     }
@@ -190,6 +210,8 @@ ApplicationWindow {
                 model: channels
                 ChannelSlider {
                     Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    showButtons: showButtonsMenu.checked
                     channelLabel: index+1
                     onValueChanged: {
                         for (let fi=0;fi<firep.count;fi++) {

@@ -10,13 +10,6 @@ CuteDMX::CuteDMX(QObject *parent)
     m_active(false)
 {
     m_frame.resize(513, 0);
-
-    m_worker=new CuteDMXWorker();
-    m_worker->moveToThread(&m_thread);
-
-    connect(&m_thread, &QThread::started, m_worker, &CuteDMXWorker::loop);
-    connect(&m_thread, &QThread::finished, m_worker, &QObject::deleteLater);
-    connect(m_worker, &CuteDMXWorker::isRunning, this, &CuteDMX::actived);
 }
 
 CuteDMX::~CuteDMX()
@@ -26,9 +19,23 @@ CuteDMX::~CuteDMX()
     m_thread.wait();
 }
 
+void CuteDMX::newWorker()
+{
+    m_worker=new CuteDMXWorker();
+    m_worker->setPort(m_device);
+    m_worker->moveToThread(&m_thread);
+
+    connect(&m_thread, &QThread::started, m_worker, &CuteDMXWorker::loop);
+    connect(&m_thread, &QThread::finished, m_worker, &QObject::deleteLater);
+    connect(m_worker, &CuteDMXWorker::isRunning, this, &CuteDMX::actived);
+    connect(m_worker, &CuteDMXWorker::invalidPort, this, &CuteDMX::invalidPort);
+    connect(m_worker, &CuteDMXWorker::destroyed, this, &CuteDMX::workerDestroyed);
+    connect(m_worker, &CuteDMXWorker::destroyed, &m_thread, &QThread::quit);
+}
+
 void CuteDMX::setPort(const QString device)
 {
-    m_worker->setPort(device);
+    m_device=device;
 }
 
 void CuteDMX::setValue(uint channel, uint8_t value, bool delayd)
@@ -40,7 +47,7 @@ void CuteDMX::setValue(uint channel, uint8_t value, bool delayd)
 
     m_frame[channel]=value;
 
-    if (!delayd)
+    if (!delayd && m_thread.isRunning())
         m_worker->updateFrame(m_frame);
 }
 
@@ -87,6 +94,17 @@ void CuteDMX::actived(bool enabled)
     emit isActive(enabled);
 }
 
+void CuteDMX::invalidPort()
+{
+    emit portError();
+}
+
+void CuteDMX::workerDestroyed(QObject *obj)
+{
+    qDebug() << "workerDestroyed";
+    m_worker=nullptr;
+}
+
 QString CuteDMX::toJson()
 {
     QJsonArray a;
@@ -100,6 +118,11 @@ QString CuteDMX::toJson()
 
 void CuteDMX::start()
 {
+    if (m_thread.isRunning())
+        return;
+
+    newWorker();
+
     m_thread.start();
 }
 

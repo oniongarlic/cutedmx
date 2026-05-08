@@ -31,11 +31,13 @@ public:
     
 signals:
     void isActive(bool enabled);
-    
     void activeChanged();
+    void portError();
     
 private slots:
     void actived(bool enabled);
+    void invalidPort();
+    void workerDestroyed(QObject *obj);
     
 private:
     QThread m_thread;
@@ -43,6 +45,8 @@ private:
 
     CuteDMXWorker *m_worker;
     bool m_active;
+    QString m_device;
+    void newWorker();
 };
 
 #endif // CUTEDMX_H
