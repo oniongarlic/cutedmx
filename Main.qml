@@ -104,6 +104,15 @@ ApplicationWindow {
                 text: "32 (2 rows)"
                 ButtonGroup.group: channelsGroup
             }
+            MenuSeparator {
+
+            }
+            MenuItem {
+                id: showButtonsMenu
+                checkable: true
+                checked: true
+                text: "Show buttons"
+            }
         }
     }
 
@@ -129,7 +138,7 @@ ApplicationWindow {
         onClicked: {
             if (button.objectName=='8') {
                 app.channels=8
-                app.split=2
+                app.split=1
             } else if (button.objectName=='16') {
                 app.channels=16
                 app.split=2
@@ -171,6 +180,8 @@ ApplicationWindow {
                 model: channels
                 ChannelSlider {
                     Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    showButtons: showButtonsMenu.checked
                     channelLabel: index+1
                     onValueChanged: {
                         for (let fi=0;fi<firep.count;fi++) {
