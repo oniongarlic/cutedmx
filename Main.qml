@@ -10,6 +10,8 @@ ApplicationWindow {
     id: app
     width: 800
     height: 480
+    minimumWidth: 800
+    minimumHeight: 480
     visible: true
     title: qsTr("Cute DMX")
 
@@ -20,6 +22,11 @@ ApplicationWindow {
     Settings {
         id: settingsDdev
         category: "device"
+    }
+
+    Settings {
+        id: settingsChannels
+        category: "channels"
     }
 
     Settings {
@@ -161,19 +168,31 @@ ApplicationWindow {
         }
     }
 
+    function updateChannelsGrid(gs) {
+        switch (gs) {
+        case '8': {
+            app.channels=8
+            app.split=1
+        }
+        break;
+        case '16': {
+            app.channels=16
+            app.split=2
+        }
+        break;
+        case '32': {
+            app.channels=32
+            app.split=2
+        }
+        break;
+        }
+        settingsChannels.setValue('gs', gs)
+    }
+
     ButtonGroup {
         id: channelsGroup
-        onClicked: (button) => {
-            if (button.objectName=='8') {
-                app.channels=8
-                app.split=1
-            } else if (button.objectName=='16') {
-                app.channels=16
-                app.split=2
-            } else if (button.objectName=='32') {
-                app.channels=32
-                app.split=2
-            }
+        onClicked: {
+            updateChannelsGrid(button.objectName);
         }
     }
 
