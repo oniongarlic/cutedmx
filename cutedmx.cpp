@@ -51,14 +51,30 @@ void CuteDMX::setValue(uint channel, uint8_t value, bool delayd)
         m_worker->updateFrame(m_frame);
 }
 
+uint8_t CuteDMX::value(uint channel)
+{
+    if (channel>512 || channel<1) {
+        qWarning("Invalid channel");
+        return 0;
+    }
+
+    return m_frame[channel];
+}
+
 void CuteDMX::updateFrame()
 {
+    if (!m_thread.isRunning())
+        return;
+
     m_worker->updateFrame(m_frame);
 }
 
 void CuteDMX::blackOut()
 {
     QByteArray black(513, 0);
+
+    if (!m_thread.isRunning())
+        return;
 
     m_worker->updateFrame(black);
 }

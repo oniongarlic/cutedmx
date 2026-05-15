@@ -8,6 +8,7 @@
 #include "serialportinfomodel.h"
 
 #include "cutedmx.h"
+#include "dmxmodel.h"
 
 int main(int argc, char *argv[])
 {
@@ -20,6 +21,7 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 
     qmlRegisterType<CuteDMX>("org.tal.dmx", 1, 0, "CuteDMX");
+    qmlRegisterType<DmxModel>("org.tal.dmx", 1, 0, "DmxModel");
     qmlRegisterType<SerialPortInfoModel>("org.tal.dmx", 1, 0, "SerialPortInfoModel");
 
     QQuickStyle::setStyle("Material");

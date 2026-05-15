@@ -34,6 +34,10 @@ ApplicationWindow {
         category: "dmx"
     }
 
+    DmxModel {
+        id: dmxModel
+    }
+
     Shortcut {
         sequences: [StandardKey.FullScreen]
         onActivated: menuFullScreen.click()
@@ -76,6 +80,17 @@ ApplicationWindow {
                     dmx.stop();
                 }
             }
+            MenuSeparator {
+
+            }
+            MenuItem {
+                id: menuDemoMode
+                text: "&Demo mode"
+                checkable: true
+                checked: false
+                enabled: !dmx.active
+            }
+
             MenuSeparator {
 
             }
@@ -149,6 +164,27 @@ ApplicationWindow {
                 text: "Show buttons"
             }
         }
+
+        Menu {
+            title: "Scenes"
+            MenuItem {
+                text: "Play"
+                enabled: !sceneTicker.running && dmxModel.count>0
+                onClicked: startTicker();
+            }
+            MenuItem {
+                text: "Stop"
+                enabled: sceneTicker.running
+                onClicked: stopTicker();
+            }
+            MenuSeparator {
+
+            }
+            MenuItem {
+                text: "Clear"
+                onClicked: dmxModel.clear();
+            }
+        }
     }
 
     header: ToolBar {
@@ -189,6 +225,38 @@ ApplicationWindow {
         settingsChannels.setValue('gs', gs)
     }
 
+    Timer {
+        id: sceneTicker
+        repeat: true
+        interval: sceneSpeed.value
+        property int row: 1
+
+        onTriggered: {
+            row++;
+            if (row>dmxModel.count)
+                row=1
+
+            setDmxFromRow(row);
+        }
+    }
+
+    function startTicker() {
+        sceneTicker.start()
+    }
+
+    function stopTicker() {
+        sceneTicker.stop()
+    }
+
+    function setDmxFromRow(r) {
+        console.debug("Set", r)
+        for (let c=1;c<512;c++) {
+            let v=dmxModel.dmxValue(r, c)
+            dmx.setValue(c, v, true)
+        }
+        dmx.updateFrame();
+    }
+
     ButtonGroup {
         id: channelsGroup
         onClicked: {
@@ -219,11 +287,12 @@ ApplicationWindow {
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.alignment: Qt.AlignTop
-            enabled: dmx.active
+            enabled: dmx.active || menuDemoMode.checked
             rows: split
             columns: channels/rows
             uniformCellWidths: true
             Repeater {
+                id: sliderRepeater
                 model: channels
                 ChannelSlider {
                     Layout.fillWidth: true
@@ -244,6 +313,59 @@ ApplicationWindow {
                     }
                 }
             }
+        }
+
+
+
+        ColumnLayout {
+
+            ListView {
+                id: lv
+                Layout.minimumWidth: 100
+                Layout.fillHeight: true
+                model: dmxModel
+                delegate: ItemDelegate {
+                    required property int index;
+                    required property string name;
+                    required property int delay;
+                    highlighted: ListView.isCurrentItem
+                    text: name
+                    onDoubleClicked: {
+                        console.debug(name, delay, index)
+                        setDmxFromRow(index);
+                    }
+                    onClicked: {
+                        lv.currentIndex=index
+                    }
+                }
+            }
+
+            Button {
+                text: "+"
+                onClicked: {
+                    let r=dmxModel.addRow("Scene", 200);
+                    for (let c=1;c<512;c++) {
+                        dmxModel.setDmxValue(r, c, dmx.value(c))
+                    }
+                }
+            }
+            Button {
+                text: "-"
+                enabled: dmxModel.count>0 && lv.currentIndex>-1
+                onClicked: dmxModel.removeRow(lv.currentIndex)
+            }
+
+        }
+
+        Slider {
+            id: sceneSpeed
+            Layout.fillHeight: true
+            from: 100
+            to: 2000
+            value: 1000
+            snapMode: Slider.SnapAlways
+            orientation: Qt.Vertical
+            wheelEnabled: true
         }
 
     }

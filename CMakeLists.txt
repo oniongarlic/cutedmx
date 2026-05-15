@@ -23,6 +23,7 @@ qt_add_qml_module(appcutedmx
         SOURCES cutedmxworker.h cutedmxworker.cpp
         SOURCES serialportinfomodel.h serialportinfomodel.cpp
         QML_FILES PortDialog.qml
+        SOURCES dmxmodel.h dmxmodel.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
