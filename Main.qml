@@ -237,6 +237,8 @@ ApplicationWindow {
                 row=1
 
             setDmxFromRow(row);
+
+            lv.currentIndex=row-1;
         }
     }
 
@@ -319,10 +321,15 @@ ApplicationWindow {
 
         ColumnLayout {
 
+            Label {
+                text: lv.currentIndex + "/" + dmxModel.count
+            }
+
             ListView {
                 id: lv
                 Layout.minimumWidth: 100
                 Layout.fillHeight: true
+                Layout.fillWidth: true
                 model: dmxModel
                 delegate: ItemDelegate {
                     required property int index;
@@ -340,19 +347,34 @@ ApplicationWindow {
                 }
             }
 
-            Button {
-                text: "+"
-                onClicked: {
-                    let r=dmxModel.addRow("Scene", 200);
-                    for (let c=1;c<512;c++) {
-                        dmxModel.setDmxValue(r, c, dmx.value(c))
+            Label {
+                text: sceneSpeed.value+"ms"
+            }
+
+            RowLayout {
+                Button {
+                    text: "+"
+                    onClicked: {
+                        let r=dmxModel.addRow("Scene", sceneSpeed.value);
+                        for (let c=1;c<512;c++) {
+                            dmxModel.setDmxValue(r, c, dmx.value(c))
+                        }
                     }
                 }
-            }
-            Button {
-                text: "-"
-                enabled: dmxModel.count>0 && lv.currentIndex>-1
-                onClicked: dmxModel.removeRow(lv.currentIndex)
+                Button {
+                    text: "-"
+                    enabled: dmxModel.count>0 && lv.currentIndex>-1
+                    onClicked: dmxModel.removeRow(lv.currentIndex)
+                }
+                Button {
+                    text: "="
+                    enabled: dmxModel.count>0 && lv.currentIndex>-1
+                    onClicked: {
+                        for (let c=1;c<512;c++) {
+                            dmxModel.setDmxValue(lv.currentIndex+1, c, dmx.value(c))
+                        }
+                    }
+                }
             }
 
         }
@@ -361,8 +383,9 @@ ApplicationWindow {
             id: sceneSpeed
             Layout.fillHeight: true
             from: 100
-            to: 2000
+            to: 4000
             value: 1000
+            stepSize: 100
             snapMode: Slider.SnapAlways
             orientation: Qt.Vertical
             wheelEnabled: true
