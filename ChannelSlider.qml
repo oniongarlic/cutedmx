@@ -3,7 +3,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 
 ColumnLayout {
-    spacing: 8
+    spacing: 4
 
     property alias value: ch.value    
     property alias channelLabel: chl.text
@@ -53,11 +53,21 @@ ColumnLayout {
         easing.type: Easing.InOutQuad
     }
 
+    Label {
+        text: Math.round(ch.value)
+        Layout.alignment: Qt.AlignHCenter
+        MouseArea {
+            anchors.fill: parent
+            onDoubleClicked: ch.value=0
+        }
+    }
+
     ColumnLayout {
         id: quickButtons
         visible: showButtons
         Layout.fillWidth: true
         Layout.alignment: Qt.AlignHCenter
+        spacing: 2
         Button {
             Layout.alignment: Qt.AlignHCenter
             Layout.fillWidth: true
@@ -83,10 +93,4 @@ ColumnLayout {
             }
         }
     }
-
-    Label {
-        text: Math.round(ch.value)
-        Layout.alignment: Qt.AlignHCenter
-    }
-
 }

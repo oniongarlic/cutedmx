@@ -320,23 +320,28 @@ ApplicationWindow {
 
 
         ColumnLayout {
+            Layout.fillHeight: true
+            Layout.fillWidth: true
 
             Label {
                 text: lv.currentIndex + "/" + dmxModel.count
+                visible: dmxModel.count>0
             }
 
             ListView {
                 id: lv
-                Layout.minimumWidth: 100
+                //Layout.minimumWidth: 100
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 model: dmxModel
+                clip: true
                 delegate: ItemDelegate {
                     required property int index;
                     required property string name;
                     required property int delay;
                     highlighted: ListView.isCurrentItem
-                    text: name
+                    width: ListView.width
+                    text: name+"("+delay+")"
                     onDoubleClicked: {
                         console.debug(name, delay, index)
                         setDmxFromRow(index);
@@ -345,6 +350,7 @@ ApplicationWindow {
                         lv.currentIndex=index
                     }
                 }
+                ScrollIndicator.vertical: ScrollIndicator { }
             }
 
             Label {
